@@ -8,7 +8,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract SpaceBear is ERC721, ERC721URIStorage, Ownable {
     uint256 private _nextTokenId;
-    bytes32 myString = "hello";
 
     constructor()
         ERC721("SpaceBear", "SBK")
