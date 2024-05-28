@@ -2,14 +2,13 @@
 // Compatible with OpenZeppelin Contracts ^5.0.0
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
+import "openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "openzeppelin-contracts/contracts/access/Ownable.sol";
+import "openzeppelin-contracts/contracts/utils/Strings.sol";
 
 contract SpaceBear is ERC721, ERC721URIStorage, Ownable {
-
-    using Counters for Counters.Counter;
-    Counters.counter private _tokenIdCounter;
+    uint256 private _nextTokenId;
 
     constructor()
         ERC721("SpaceBear", "SBK")
@@ -21,8 +20,7 @@ contract SpaceBear is ERC721, ERC721URIStorage, Ownable {
     }
 
     function safeMint(address to) public onlyOwner {
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
+        uint256 tokenId = _nextTokenId++;
         _safeMint(to, tokenId);
     }
 
@@ -30,11 +28,11 @@ contract SpaceBear is ERC721, ERC721URIStorage, Ownable {
 
     function tokenURI(uint256 tokenId)
         public
-        view
+        pure
         override(ERC721, ERC721URIStorage)
         returns (string memory)
     {
-        return super.tokenURI(tokenId);
+        return string(abi.encodePacked(_baseURI(), "spacebear_", Strings.toString(tokenId + 1), ".json"));
     }
 
     function supportsInterface(bytes4 interfaceId)
